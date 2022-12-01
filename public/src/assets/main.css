@@ -1,0 +1,85 @@
+.textMenu {
+    height: 100px;
+    width: 150px;
+    color: aliceblue;
+    font-size: x-large;
+    line-height: 90px;
+    border-radius: 10px;
+  }
+  
+  .blockColor1 {
+    background: rgba(207, 6, 6, 0.904);
+  }
+  
+  .blockColor2 {
+    background: rgba(15, 212, 9, 0.904);
+  }
+  
+  .blockColor3 {
+    background: rgba(8, 103, 226, 0.904);
+  }
+  
+  .blockColor4 {
+    background: rgba(224, 186, 12, 0.904);
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  .textMenu:hover {
+    transform: scale(1.1);
+  }
+  
+  li {
+    display: inline-block;
+    list-style: none;
+    padding-right: 10px;
+  }
+  
+  .container {
+    margin: auto;
+  }
+  
+  .topblock {
+    margin-bottom: 0px;
+    margin-top: 200px;
+  }
+  
+  .form {
+    width: 40%;
+    margin-left: 30%;
+  }
+  
+  .tableL{
+    width: 50%;
+    margin-left: 25%;
+  }
+  
+  .formButtonSub {
+    margin-top: 15px;
+    margin-left: 100px;
+  }
+  
+  .formButtonCan {
+    margin-top: 15px;
+    margin-left: 20px;
+  }
+  
+  div h4 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  @media(max-width:992px){
+    .formButtonSub {
+      margin-top: 15px;
+      margin-left: 0px;
+    }
+  
+    .formButtonCan {
+      margin-top: 15px;
+      margin-right: 0px;
+    }
+  }
+  
+  
