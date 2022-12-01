@@ -42,7 +42,7 @@ const createNewRecord = asyncWrapper (async (req, res)=>{
    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`
    console.log(req.body);
    const {passenger_name, airline, currency, amount, itinerary, issuing_date, travel_type} = req.body
-   const number = getserialNumber()
+   const number = req.body.number || getserialNumber()
    await pool.query(query, [(airline + number), passenger_name, airline, number, currency, Number(amount), itinerary, issuing_date, travel_type],
    (error, results) =>{
       if(error){
@@ -59,6 +59,7 @@ const createMultipleRecords = asyncWrapper(async (req, res)=>{
    const query = `INSERT INTO travel_ticket 
    (ticket_number, passenger_name, airline, number, currency, amount, itinerary, issuing_date)
    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`
+   console.log(req.body)
    for (const key in req.body)
    {
       const {passenger_name, airline, currency, amount, itinerary, issuing_date,  travel_type} = req.body[key]
