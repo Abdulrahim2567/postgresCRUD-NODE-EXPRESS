@@ -1,0 +1,96 @@
+{
+   "success": true,
+   "record": [
+       {
+           "ticket_number": "213301120229230",
+           "passenger_name": "livenje Amoson billa",
+           "airline": "213",
+           "number": "301120229230",
+           "currency": "XAF",
+           "amount": "3212.00",
+           "itinerary": "Space X",
+           "issuing_date": "Mon Nov 21 2022",
+           "days": "+11 Days",
+           "flight_status": "Flown",
+           "travel_type": "Hotel"
+       },
+       {
+           "ticket_number": "AIR2911202215617",
+           "passenger_name": "new name",
+           "airline": "AIR",
+           "number": "2911202215617",
+           "currency": "XAF",
+           "amount": "20000.00",
+           "itinerary": "TML",
+           "issuing_date": "Thu Nov 24 2022",
+           "days": "+8 Days",
+           "flight_status": "Flown",
+           "travel_type": "Flight"
+       },
+       {
+           "ticket_number": "AIR28112022174119",
+           "passenger_name": "New Record",
+           "airline": "AIR",
+           "number": "28112022174119",
+           "currency": "XAF",
+           "amount": "200000.00",
+           "itinerary": "CFG",
+           "issuing_date": "Mon Nov 28 2022",
+           "days": "+4 Days",
+           "flight_status": "Flown",
+           "travel_type": null
+       },
+       {
+           "ticket_number": "AIR28112022172857",
+           "passenger_name": "Patched Record",
+           "airline": "AIR",
+           "number": "28112022172857",
+           "currency": "XAF",
+           "amount": "200000.00",
+           "itinerary": "CFG",
+           "issuing_date": "Mon Nov 28 2022",
+           "days": "+4 Days",
+           "flight_status": "Flown",
+           "travel_type": null
+       },
+       {
+           "ticket_number": "AIR271120220367",
+           "passenger_name": "Pending",
+           "airline": "AIR",
+           "number": "271120220367",
+           "currency": "XAF",
+           "amount": "150000.00",
+           "itinerary": "ICT2",
+           "issuing_date": "Mon Nov 28 2022",
+           "days": "+4 Days",
+           "flight_status": "Flown",
+           "travel_type": null
+       },
+       {
+           "ticket_number": "AIR28112022175353",
+           "passenger_name": "Rahim Abdou",
+           "airline": "AIR",
+           "number": "28112022175353",
+           "currency": "XAF",
+           "amount": "200000.00",
+           "itinerary": "CFG",
+           "issuing_date": "Mon Nov 28 2022",
+           "days": "+4 Days",
+           "flight_status": "Flown",
+           "travel_type": null
+       },
+       {
+           "ticket_number": "3946716835023",
+           "passenger_name": "TETTEH YEBOAH GLADYS",
+           "airline": "394",
+           "number": "6716835023",
+           "currency": "GHS",
+           "amount": "100.00",
+           "itinerary": "ACC TML TML ACC ",
+           "issuing_date": "Mon Oct 17 2022",
+           "days": "+46 Days",
+           "flight_status": "Flown",
+           "travel_type": "Flight"
+       }
+   ]
+}

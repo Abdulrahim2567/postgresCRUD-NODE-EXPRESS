@@ -21,8 +21,8 @@
               required
               aria-label="Default select example"
               id="3"
+              placeholder="Choose..."
             >
-              <option selected disabled value="">Choose...</option>
               <option value="Flight">Flight</option>
               <option value="Boat">Boat</option>
               <option value="Train">Train</option>

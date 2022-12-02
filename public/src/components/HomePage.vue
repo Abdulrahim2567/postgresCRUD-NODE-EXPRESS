@@ -23,7 +23,7 @@
             name="demo[]"
             @select="onSelectedFiles"
             chooseLabel="Import single"
-            style="background-color: rgba(15, 212, 9, 0.904); border: none"
+            style="background-color: rgba(15, 212, 9, 0.904); border: none;"
           />
         </div>
         <div class="col-4 buttons square" style="background-color: #155df7c7">
@@ -45,7 +45,7 @@
           to="dataTablesVue"
           class="col-4 buttons square"
           style="background-color: #a59b0bc7"
-          >List</router-link
+          >Show Tickets</router-link
         >
       </div>
     </div>
@@ -379,7 +379,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.col-4{
+  transition: 0.5s ease-in-out;
+  border-radius: 10px;
+}
 .col-4:hover {
+  transition: 0.5s ease-in-out;
   transform: scale(1.1);
   line-height: 90px;
   border-radius: 10px;
@@ -424,4 +429,5 @@ export default {
 .labels {
   width: 120px;
 }
+
 </style>

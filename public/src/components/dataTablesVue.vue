@@ -18,7 +18,7 @@
           <div class="table-header">
             <h5 class="mb-2 md:m-0 p-as-md-center bold">ALL TICKETS</h5>
             <span class="p-input-icon-left">
-              <i class="pi pi-search" />
+              <i class="pi pi-search " />
               <InputText
                 v-model="filters['global'].value"
                 placeholder="Search..."
@@ -29,37 +29,39 @@
 
         <Column selectionMode="multiple" :exportable="false"></Column>
 
-        <Column field="passenger_name" header="Travel" :sortable="true">
+        <Column field="passenger_name" header="Travel" :sortable="true" class="font">
           <template #body="slotProps">
-            <div class="displayTravel">
-              <span class="displayTravel" style="font-weight: bold;">{{ slotProps.data.passenger_name }}</span>
-              <span class="displayTravel grey" >{{ slotProps.data.itinerary }}</span>
-              <span class="displayTravel">
-                <span class = "blue bold">{{slotProps.data.airline + " "}}</span><span class = "blue bold">{{slotProps.data.number}} | </span>
-                <span class="bold grey">{{slotProps.data.issuing_date}}</span>
+            <div class="displayTravel font">
+              <span class="displayTravel font" style="font-weight: bold;">{{ slotProps.data.passenger_name }}</span>
+              <span class="displayTravel grey font" >{{ slotProps.data.itinerary }}</span>
+              <span class="displayTravel font">
+                <span class = "blue bold font">{{slotProps.data.airline + " "}}</span><span class = "blue bold font">{{slotProps.data.number}} | </span>
+                <span class="bold grey font">{{slotProps.data.issuing_date}}</span>
               </span>
             </div>
           </template>
         </Column>
-        <Column field="amount" header="Amount" :sortable="true">
+        <Column field="amount" header="Amount" :sortable="true" class="font">
             <template #body="slotProps">
-            <div class="displayTravel">
-              <span class="displayTravel"><span class="green bold">{{( slotProps.data.currency +' ')}}</span>
-              <span style="font-weight: bold;">{{(slotProps.data.amount)}}</span></span>
-              <span class="displayTravel grey">{{ slotProps.data.days }}</span>
-              <span class="statusTicket bold">{{slotProps.data.flight_status}}</span>
+            <div class="displayTravel font">
+              <span class="displayTravel"><span class="light-green bold font">{{( slotProps.data.currency +' ')}}</span>
+              <span style="font-weight: bold;" clas = "font">{{(slotProps.data.amount)}}</span></span>
+              <span class="displayTravel grey font">{{ slotProps.data.days }}</span>
+              <span 
+              v-bind:class="{'red': flown, 'blue': pending, 'green': boarding}"
+                class="statusTicket bold font" id="flight_status">{{slotProps.data.flight_status}}</span>
             </div>
           </template>
         </Column>
 
         <Column :exportable="false">
           <template #body="slotProps">
-            <Button style="margin-right: 2.5px; background: none; color: black; border-color: black;"
+            <Button style="margin-right: 2.5px; background: none; color: blue; border-color: black;"
               icon="pi pi-pencil"
               class="p-button p-button mr-2"
               @click="editProduct(slotProps.data)"
             />
-            <Button style="margin-left: 2.5px; background: none; color: black; border-color: black;"
+            <Button style="margin-left: 2.5px; background: none; color: red; border-color: black;"
               icon="pi pi-trash"
               class="p-button p-button"
               @click="confirmDeleteProduct(slotProps.data)"
@@ -105,7 +107,7 @@
         >
       </div>
       <div class="field">
-        <label for="name">Itinerary</label>
+        <label for="name">Flight Type</label>
         <select
           class="form-select"
           required
@@ -121,11 +123,11 @@
           <option value="Car">Car</option>
         </select>
         <small class="p-error" v-if="submitted && !product.itinerary"
-          >Itinerary is required.</small
+          >Flight Type is required.</small
         >
       </div>
       <div class="field">
-        <label for="name">Travel Type</label>
+        <label for="name">Itinerary</label>
         <InputText
           id="name"
           v-model.trim="product.itinerary"
@@ -173,20 +175,20 @@
       :modal="true"
     >
       <div class="confirmation-content">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+        <em class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem;" />
         <span v-if="product"
           >Are you sure you want to delete <strong>{{ product.passenger_name }}</strong>?</span
         >
       </div>
       <template #footer>
         <Button
-          label="Non"
+          label="No"
           icon="pi pi-times"
           class="p-button-text"
           @click="deleteProductDialog = false"
         />
         <Button
-          label="Oui"
+          label="Yes"
           icon="pi pi-check"
           class="p-button-text"
           @click="deleteProduct"
@@ -224,207 +226,7 @@
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
-import { FilterMatchMode } from "primevue/api";
-import { useToast } from "primevue/usetoast";
-import ProductService from "./service/productService";
-import axios from "axios";
-
-export default {
-  name: "dataTablesVue",
-  setup() {
-    onMounted(() => {
-      //productService.value
-      //.getProducts()
-      //.then((data) => (products.value = data));
-      axios
-        .get("http://localhost:3000/api/v1/records")
-        .then((res) => {
-          products.value = res.data.record;
-          console.log(products.value);
-          return products.value;
-        })
-        .catch(() => {});
-    });
-
-    const toast = useToast();
-    const dt = ref();
-    const products = ref();
-    const productDialog = ref(false);
-    const deleteProductDialog = ref(false);
-    const deleteProductsDialog = ref(false);
-    const product = ref({});
-    const selectedProducts = ref();
-    const filters = ref({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    });
-    const submitted = ref(false);
-    const statuses = ref([
-      { label: "INSTOCK", value: "instock" },
-      { label: "LOWSTOCK", value: "lowstock" },
-      { label: "OUTOFSTOCK", value: "outofstock" },
-    ]);
-
-    const formatCurrency = (value) => {
-      if (value)
-        return value.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
-      return;
-    };
-    const openNew = () => {
-      product.value = {};
-      submitted.value = false;
-      productDialog.value = true;
-    };
-    const hideDialog = () => {
-      productDialog.value = false;
-      submitted.value = false;
-    };
-    const saveProduct = () => {
-      submitted.value = true;
-
-      if (product.value.name.trim()) {
-        if (product.value.id) {
-          product.value.inventoryStatus = product.value.inventoryStatus.value
-            ? product.value.inventoryStatus.value
-            : product.value.inventoryStatus;
-          products.value[findIndexById(product.value.id)] = product.value;
-          toast.add({
-            severity: "success",
-            summary: "Successful",
-            detail: "Product Updated",
-            life: 3000,
-          });
-        } else {
-          product.value.inventoryStatus = product.value.inventoryStatus
-            ? product.value.inventoryStatus.value
-            : "INSTOCK";
-          products.value.push(product.value);
-          toast.add({
-            severity: "success",
-            summary: "Successful",
-            detail: "Product Created",
-            life: 3000,
-          });
-        }
-
-        productDialog.value = false;
-        product.value = {};
-      }
-    };
-    const editProduct = (prod) => {
-      product.value = { ...prod };
-      productDialog.value = true;
-    };
-    const confirmDeleteProduct = (prod) => {
-      product.value = prod;
-      deleteProductDialog.value = true;
-    };
-    const deleteProduct = () => {
-      axios.delete(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`).then((res)=>{
-        deleteProductDialog.value = false;
-      product.value = {};
-      toast.add({
-        severity: "success",
-        summary: res.data.msg,
-        detail: "Record Deleted",
-        life: 3000,
-      });
-      }).catch()
-      products.value = products.value.filter(
-        (val) => val.id !== product.value.id
-      );
-      
-    };
-    const findIndexById = (id) => {
-      let index = -1;
-      for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
-          index = i;
-          break;
-        }
-      }
-
-      return index;
-    };
-    const createId = () => {
-      let id = "";
-      var chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-    };
-    const confirmDeleteSelected = () => {
-      deleteProductsDialog.value = true;
-    };
-    const deleteSelectedProducts = () => {
-      axios.delete(`http://localhost:3000api/v1/records/${selectedProducts.value}`).then().catch();
-      products.value = products.value.filter(
-        (val) => !selectedProducts.value.includes(val)
-      );
-      deleteProductsDialog.value = false;
-      selectedProducts.value = null;
-      toast.add({
-        severity: "success",
-        summary: "Successful",
-        detail: "Products Deleted",
-        life: 3000,
-      });
-    };
-
-    return {
-      dt,
-      products,
-      productDialog,
-      deleteProductDialog,
-      deleteProductsDialog,
-      product,
-      selectedProducts,
-      filters,
-      submitted,
-      statuses,
-      formatCurrency,
-      openNew,
-      hideDialog,
-      saveProduct,
-      editProduct,
-      confirmDeleteProduct,
-      deleteProduct,
-      findIndexById,
-      createId,
-      confirmDeleteSelected,
-      deleteSelectedProducts,
-    };
-  },
-};
-
-
-// const flight_status = document.getElementsByClassName("statusTicket")
-// if(flight_status.value == "Flown")
-// {
-//   flight_status.classList.remove("green")
-//   flight_status.classList.remove("blue")
-//   flight_status.classList.add("red")
-// }
-// else if(flight_status.value == "Pending")
-// {
-//   flight_status.classList.remove("green")
-//   flight_status.classList.add("blue")
-//   flight_status.classList.remove("red")
-// }
-// else
-// {
-//   flight_status.classList.add("deepgreen")
-//   flight_status.classList.remove("blue")
-//   flight_status.classList.remove("red")
-// }
-
-</script>
+<script  type="application/javascript" src="./scripts/index.js"></script>
 
 <style lang="scss" scoped>
 body{
@@ -457,7 +259,12 @@ body{
   color:green;
   font-family:Arial, Helvetica, sans-serif;
 }
-
+.light-green{
+  color: rgb(78, 233, 78);
+}
+.font{
+  font-family: Arial, Helvetica, sans-serif;
+}
 .deepGreen{
   color: rgba(54, 97, 54, 0.479);
   font-family:Arial, Helvetica, sans-serif;
