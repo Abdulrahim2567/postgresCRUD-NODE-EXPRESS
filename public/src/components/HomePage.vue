@@ -166,64 +166,66 @@ export default {
     };
   },
   setup() {
-    const productList = new Array();
-
     const onSelectedFiles = (event) => {
       console.log(event.files[0].name);
-      
-      for (let index = 0; index < event.files.length; index++) {
+
+      for (const element of event.files) {
         const reader = new FileReader();
-        reader.onload = () => {
-          //callback(reader.result);
+        reader.onload = async () => {
           console.log("reader.result.toString()==>" + reader.result.toString());
-          //fi.value = reader.result.toString();
           let objectFile = extractData(reader.result.toString());
-            //productList.push(objectFile);
-            axios.post('http://localhost:3000/api/v1/records',objectFile)
-        .then(()=>{
-          initializeProduct()
-        }).catch(()=>{});
+          await axios
+            .post("http://localhost:3000/api/v1/records", objectFile)
+            .then(() => {
+              initializeProduct();
+            })
+            .catch(() => {})
+         
         };
-        
-        reader.readAsText(event.files[index]);
-        
+
+        reader.readAsText(element);
       }
-      
     };
 
-    function extractData (file) {
-        
-        const regex = new RegExp('^D-([\\d]{6})|^H-[\\d]*;[\\w\\d]{4}([\\w\\d]{3});[\\w\\s]+;([\\w]{3})|^K[\\w]+;\\w([a-zA-Z]+)([\\d.]+)|^I[-\\d]+;[\\d]+([\\w\\s\\/]+)|^T-\\w([\\d]+)-([\\d]+)\\s', 'gm');
-        let iti = '';
-        console.log('conten of file====>'+file);
+    function extractData(file) {
+      const regex = /^D-([\d]{6})|^H-[\d]*;[\w\d]{4}([\w\d]{3});[\w\s]+;([\w]{3})|^K[\w]+;\w([a-zA-Z]+)([\d.]+)|^I[-\d]+;[\d]+([\w\s\/]+)|^T-\w([\d]+)-([\d]+)\s/gm;
+      let iti = "";
+      console.log("conten of file====>" + file);
       let m;
-      console.log('fliType==>'+typeof(file));
+      console.log("fliType==>" + typeof file);
       while ((m = regex.exec(file)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
         if (m.index === regex.lastIndex) {
           regex.lastIndex++;
         }
-        
+
         // The result can be accessed through the `m`-variable.
-        
+
         m.forEach((match, groupIndex) => {
           //console.log(`Found match, group ${groupIndex}: ${match}`);
           if (groupIndex == 1 && match !== undefined) {
-            
-            let arr = match.split('');
-            const str = '20'+arr[0]+arr[1]+'-'+arr[2]+arr[3]+'-'+arr[4]+arr[5];
+            let arr = match.split("");
+            const str =
+              "20" +
+              arr[0] +
+              arr[1] +
+              "-" +
+              arr[2] +
+              arr[3] +
+              "-" +
+              arr[4] +
+              arr[5];
             const date = new Date(str);
-            product.issuing_date=date;
+            product.issuing_date = date;
             console.log(date);
-
           }
           if (groupIndex == 2 && match !== undefined) {
-            iti +=match+' ';
+            iti += match + " ";
             console.log(match);
           }
           if (groupIndex == 3 && match !== undefined) {
-            iti +=match+' ';
-            
+            iti += match + " ";
+
             console.log(match);
           }
           if (groupIndex == 4 && match !== undefined) {
@@ -235,25 +237,23 @@ export default {
             console.log(match);
           }
           if (groupIndex == 6 && match !== undefined) {
-            let array = match.split('/');
-            product.passenger_name = array[0]+' '+array[1];
+            let array = match.split("/");
+            product.passenger_name = array[0] + " " + array[1];
             console.log(match);
           }
           if (groupIndex == 7 && match !== undefined) {
-            product.airline=match;
+            product.airline = match;
             console.log(match);
           }
           if (groupIndex == 8 && match !== undefined) {
-            product.number=match;
+            product.number = match;
             console.log(match);
           }
-          
         });
-        
       }
       product.itinerary = iti;
-      product.travel_type="Flight";
-      console.log('product.itinerary==>'+product.itinerary);
+      product.travel_type = "Flight";
+      console.log("product.itinerary==>" + product.itinerary);
       return product;
     }
 
@@ -288,7 +288,7 @@ export default {
       travel_type: "",
       issuing_date: "",
       itinerary: "",
-      currency: ""
+      currency: "",
     });
     const productService = ref(new ProductService());
     const selectedProducts = ref();
@@ -320,38 +320,38 @@ export default {
     };
 
     const saveProduct = () => {
-      product.travel_type = product.travel_type.name
-      delete product.value
-      axios.post('http://localhost:3000/api/v1/records', product)
-        .then(()=>{
+      product.travel_type = product.travel_type.name;
+      delete product.value;
+      axios
+        .post("http://localhost:3000/api/v1/records", product)
+        .then(() => {
           submitted.value = true;
-      console.log("form==>" + product.issuing_date)
+          console.log("form==>" + product.issuing_date);
 
-      toast.add({
-        severity: "success",
-        summary: "Successful",
-        detail: "Ticket Created",
-        life: 3000,
-      });
+          toast.add({
+            severity: "success",
+            summary: "Successful",
+            detail: "Ticket Created",
+            life: 3000,
+          });
 
-      productDialog.value = false;
-        initializeProduct()
-      }).catch(()=>{})
-
-      
+          productDialog.value = false;
+          initializeProduct();
+        })
+        .catch(() => {});
     };
 
-    const initializeProduct = ()=>{
-        product.amount = "";
-        product.airline = "";
-        product.number = "";
-        product.passenger_name = "";
-        product.amount = "";
-        product.travel_type = "";
-        product.issuing_date = "";
-        product.itinerary = "";
-        product.currency = ""
-    }
+    const initializeProduct = () => {
+      product.amount = "";
+      product.airline = "";
+      product.number = "";
+      product.passenger_name = "";
+      product.amount = "";
+      product.travel_type = "";
+      product.issuing_date = "";
+      product.itinerary = "";
+      product.currency = "";
+    };
 
     return {
       initializeProduct,
@@ -375,6 +375,7 @@ export default {
     };
   },
 };
+
 </script>
 
 <style lang="scss" scoped>
@@ -383,6 +384,7 @@ export default {
   line-height: 90px;
   border-radius: 10px;
 }
+
 .buttons {
   //   background-color: #cf1e07c7; /* Green */
   border: none;
@@ -404,17 +406,21 @@ export default {
   padding: none;
   width: 68px;
 }
+
 .putCurr {
   padding: none;
   width: 68px;
   background: greenyellow;
 }
+
 .putL {
   width: 300px;
 }
+
 .putLa {
   width: 350px;
 }
+
 .labels {
   width: 120px;
 }

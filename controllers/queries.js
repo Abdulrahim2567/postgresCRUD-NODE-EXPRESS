@@ -16,21 +16,27 @@ const getAllRecords = asyncWrapper (async (req, res)=>{
               const difference_in_time = dateDB.getTime() - new Date().getTime()
             const fullday = Math.ceil(difference_in_time / (1000*3600*24))
             const hours = ((difference_in_time / (1000*3600*24)) - fullday) * 24
-            row.days = fullday
             if(fullday == 0)
                row.days = Math.ceil(hours).toString().concat(" hrs")
             if(dateDB.getTime() > new Date().getTime())
-               row.flight_status = `Pending`
+               {
+                  row.days = fullday + " Days"
+                  row.flight_status = `Pending`
+               }
             else if(dateDB.getTime() < new Date().getTime())
-               row.flight_status = `Flown`
+               {
+                  row.days = "+" + (fullday* (-1)) + " Days"
+                  row.flight_status = `Flown`
+               }
             else
             {
                row.flight_status = `Boarding`
-               row.days = 0
+               row.days = "Today"
             }
             if(dateDB.toDateString() == new Date().toDateString())
                row.flight_status = `Boarding`
-         })
+            row.issuing_date = new Date(row.issuing_date).toDateString()
+         })  
          res.status(StatusCodes.OK).json({success: true, record:results.rows})
       }
    }) 
@@ -63,7 +69,7 @@ const createMultipleRecords = asyncWrapper(async (req, res)=>{
    for (const key in req.body)
    {
       const {passenger_name, airline, currency, amount, itinerary, issuing_date,  travel_type} = req.body[key]
-      const number = getserialNumber()
+      const number = req.body[key].ticket_number || getserialNumber()
       pool.query(query, [(airline + number), passenger_name, airline, number, currency, Number(amount), itinerary, issuing_date,  travel_type],
       (error, results) =>{
          if(error){
@@ -92,19 +98,25 @@ const getSingleRecord = asyncWrapper (async (req, res, next)=>{
          results.rows[0].issuing_date = dateDB.toLocaleDateString()
          const difference_in_time = dateDB.getTime() - new Date().getTime()
          const fullday = Math.ceil(difference_in_time / (1000*3600*24))
-         const hours = ((difference_in_time / (1000*3600*24)) - fullday) * 24
-         results.rows[0].days = fullday
+         const hours = ((difference_in_time / (1000*3600*24)) - fullday) * 2
          if(fullday == 0)
             results.rows[0].days = Math.ceil(hours).toString().concat(" hrs") 
          console.log(dateDB.toLocaleTimeString() < new Date().toLocaleString)
          if(dateDB.getTime() > new Date().getTime())
+         {
+            results.rows[0].days = fullday + " Days"
             results.rows[0].flight_status = `Pending`
+         }
+            
          else if(dateDB.getTime() < new Date().getTime())
+         {
+            results.rows[0].days = "+" + (fullday* (-1)) + " Days"
             results.rows[0].flight_status = `Flown`
+         }
          else
          {
+            results.rows[0].days = "Today"
             results.rows[0].flight_status = `Boarding`
-            results.rows[0].days = 0
          }
          if(dateDB.toDateString() == new Date().toDateString())
             results.rows[0].flight_status = `Boarding`

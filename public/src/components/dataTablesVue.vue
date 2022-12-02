@@ -1,18 +1,6 @@
 <template>
-  <div class="container pt-5">
+  <div class="container mt-3 mb-3">
     <div class="card">
-      <Toolbar class="mb-4">
-        <template #start>
-          <Button
-            label="Delete"
-            icon="pi pi-trash"
-            class="p-button-danger"
-            @click="confirmDeleteSelected"
-            :disabled="!selectedProducts || !selectedProducts.length"
-          />
-        </template>
-      </Toolbar>
-
       <DataTable
         ref="dt"
         :value="products"
@@ -28,7 +16,7 @@
       >
         <template #header>
           <div class="table-header">
-            <h5 class="mb-2 md:m-0 p-as-md-center">LIST TRAVEL TICKETS</h5>
+            <h5 class="mb-2 md:m-0 p-as-md-center bold">ALL TICKETS</h5>
             <span class="p-input-icon-left">
               <i class="pi pi-search" />
               <InputText
@@ -40,28 +28,40 @@
         </template>
 
         <Column selectionMode="multiple" :exportable="false"></Column>
-        <colgroup>
-          <Column field="passenger_name" header="Passenger Name" :sortable="true"></Column>
-          <Column field="itinerary" header = "Itinerary" :sortable="true"></Column>
-          <Column field="ticket_number" header="Airline Number" :sortable="true"></Column>
-          <Column field="currency" header="Currency" :sortable="true"></Column>
-          <Column field="amount" header="Amount" :sortable="true"></Column>
-          <Column field="days" header="Days" :sortable="true"></Column>
-          <Column field="flight_status" header="Flight Status" :sortable="true"></Column>
-        </colgroup>
-        
+
+        <Column field="passenger_name" header="Travel" :sortable="true">
+          <template #body="slotProps">
+            <div class="displayTravel">
+              <span class="displayTravel" style="font-weight: bold;">{{ slotProps.data.passenger_name }}</span>
+              <span class="displayTravel grey" >{{ slotProps.data.itinerary }}</span>
+              <span class="displayTravel">
+                <span class = "blue bold">{{slotProps.data.airline + " "}}</span><span class = "blue bold">{{slotProps.data.number}} | </span>
+                <span class="bold grey">{{slotProps.data.issuing_date}}</span>
+              </span>
+            </div>
+          </template>
+        </Column>
+        <Column field="amount" header="Amount" :sortable="true">
+            <template #body="slotProps">
+            <div class="displayTravel">
+              <span class="displayTravel"><span class="green bold">{{( slotProps.data.currency +' ')}}</span>
+              <span style="font-weight: bold;">{{(slotProps.data.amount)}}</span></span>
+              <span class="displayTravel grey">{{ slotProps.data.days }}</span>
+              <span class="statusTicket bold">{{slotProps.data.flight_status}}</span>
+            </div>
+          </template>
+        </Column>
+
         <Column :exportable="false">
           <template #body="slotProps">
-
-
-            <Button
+            <Button style="margin-right: 2.5px; background: none; color: black; border-color: black;"
               icon="pi pi-pencil"
-              class="p-button-rounded p-button-success mr-2"
+              class="p-button p-button mr-2"
               @click="editProduct(slotProps.data)"
             />
-            <Button
+            <Button style="margin-left: 2.5px; background: none; color: black; border-color: black;"
               icon="pi pi-trash"
-              class="p-button-rounded p-button-warning"
+              class="p-button p-button"
               @click="confirmDeleteProduct(slotProps.data)"
             />
           </template>
@@ -89,7 +89,7 @@
           >Name is required.</small
         >
       </div>
-      
+
       <div class="field">
         <label for="name">Issuing Date</label>
         <Input
@@ -107,19 +107,19 @@
       <div class="field">
         <label for="name">Itinerary</label>
         <select
-              class="form-select"
-              required
-              aria-label="Default select example"
-              v-model.trim="product.travel_type"
-              id="name"
-              :class="{ 'p-invalid': submitted && !product.itinerary }"
-            >
-              <option selected disabled value="">Choose...</option>
-              <option value="Flight">Flight</option>
-              <option value="Boat">Boat</option>
-              <option value="Train">Train</option>
-              <option value="Car">Car</option>
-            </select>
+          class="form-select"
+          required
+          aria-label="Default select example"
+          v-model.trim="product.travel_type"
+          id="name"
+          :class="{ 'p-invalid': submitted && !product.itinerary }"
+        >
+          <option selected disabled value="">Choose...</option>
+          <option value="Flight">Flight</option>
+          <option value="Boat">Boat</option>
+          <option value="Train">Train</option>
+          <option value="Car">Car</option>
+        </select>
         <small class="p-error" v-if="submitted && !product.itinerary"
           >Itinerary is required.</small
         >
@@ -166,6 +166,7 @@
     </Dialog>
 
     <Dialog
+      icon = "pi pi-exclamation-triangle mr-3"
       v-model:visible="deleteProductDialog"
       :style="{ width: '450px' }"
       header="Confirm"
@@ -174,8 +175,7 @@
       <div class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
         <span v-if="product"
-          >Are you sure you want to delete <b>{{ product.passenger_name }}</b
-          >?</span
+          >Are you sure you want to delete <strong>{{ product.passenger_name }}</strong>?</span
         >
       </div>
       <template #footer>
@@ -201,20 +201,20 @@
       :modal="true"
     >
       <div class="confirmation-content">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+        <em class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
         <span v-if="product"
           >Are you sure you want to delete the selected products?</span
         >
       </div>
       <template #footer>
         <Button
-          label="Non"
+          label="No"
           icon="pi pi-times"
           class="p-button-text"
           @click="deleteProductsDialog = false"
         />
         <Button
-          label="Oui"
+          label="Yes"
           icon="pi pi-check"
           class="p-button-text"
           @click="deleteSelectedProducts"
@@ -236,15 +236,16 @@ export default {
   setup() {
     onMounted(() => {
       //productService.value
-        //.getProducts()
-        //.then((data) => (products.value = data));
-      axios.get('http://localhost:3000/api/v1/records').then((res) => {
-        
-        products.value = res.data.record
-        console.log(products.value);
-        return products.value
-        
-      }).catch(() =>{} )
+      //.getProducts()
+      //.then((data) => (products.value = data));
+      axios
+        .get("http://localhost:3000/api/v1/records")
+        .then((res) => {
+          products.value = res.data.record;
+          console.log(products.value);
+          return products.value;
+        })
+        .catch(() => {});
     });
 
     const toast = useToast();
@@ -254,7 +255,6 @@ export default {
     const deleteProductDialog = ref(false);
     const deleteProductsDialog = ref(false);
     const product = ref({});
-    const productService = ref(new ProductService());
     const selectedProducts = ref();
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -324,18 +324,20 @@ export default {
       deleteProductDialog.value = true;
     };
     const deleteProduct = () => {
-        //axios.delete('api',product.value.id).then().catch()
-      products.value = products.value.filter(
-        (val) => val.id !== product.value.id
-      );
-      deleteProductDialog.value = false;
+      axios.delete(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`).then((res)=>{
+        deleteProductDialog.value = false;
       product.value = {};
       toast.add({
         severity: "success",
-        summary: "Successful",
-        detail: "Product Deleted",
+        summary: res.data.msg,
+        detail: "Record Deleted",
         life: 3000,
       });
+      }).catch()
+      products.value = products.value.filter(
+        (val) => val.id !== product.value.id
+      );
+      
     };
     const findIndexById = (id) => {
       let index = -1;
@@ -361,8 +363,7 @@ export default {
       deleteProductsDialog.value = true;
     };
     const deleteSelectedProducts = () => {
-        
-      axios.delete(`api/v1/record/${selectedProducts.value}`).then().catch()
+      axios.delete(`http://localhost:3000api/v1/records/${selectedProducts.value}`).then().catch();
       products.value = products.value.filter(
         (val) => !selectedProducts.value.includes(val)
       );
@@ -401,10 +402,72 @@ export default {
     };
   },
 };
+
+
+// const flight_status = document.getElementsByClassName("statusTicket")
+// if(flight_status.value == "Flown")
+// {
+//   flight_status.classList.remove("green")
+//   flight_status.classList.remove("blue")
+//   flight_status.classList.add("red")
+// }
+// else if(flight_status.value == "Pending")
+// {
+//   flight_status.classList.remove("green")
+//   flight_status.classList.add("blue")
+//   flight_status.classList.remove("red")
+// }
+// else
+// {
+//   flight_status.classList.add("deepgreen")
+//   flight_status.classList.remove("blue")
+//   flight_status.classList.remove("red")
+// }
+
 </script>
 
 <style lang="scss" scoped>
+body{
+  font-family:Arial, Helvetica, sans-serif;
+}
+.displayTravel{
+    display: block;
+}
+
+.bold{
+  font-weight: bold;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.grey{
+  color:grey;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.blue{
+  color: blue;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.red{
+  color: red;
+  font-family:Arial, Helvetica, sans-serif;
+}
+.green{
+  color:green;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.deepGreen{
+  color: rgba(54, 97, 54, 0.479);
+  font-family:Arial, Helvetica, sans-serif;
+}
+.statusTicket{
+    color: rgb(32, 32, 237);
+    font-family:Arial, Helvetica, sans-serif;
+}
 .table-header {
+  font-family:Arial, Helvetica, sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
