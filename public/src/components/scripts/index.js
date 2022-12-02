@@ -1,4 +1,3 @@
-
 import { ref, onMounted } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
@@ -6,21 +5,51 @@ import axios from "axios";
 
 export default {
   name: "dataTablesVue",
+  data() {
+    return {
+      Ticket: {
+        issuDate: null,
+      },
+      selectedType: null,
+      type: [
+        { name: "Flight" },
+        { name: "Hotel" },
+        { name: "Car" },
+        { name: "Misc" },
+      ],
+    };
+  },
   setup() {
     onMounted(() => {
-      axios
-        .get("http://localhost:3000/api/v1/records")
-        .then((res) => {
-          products.value = res.data.record;
-          console.log(products.value);
-          return products.value;
-        })
-        .catch(() => {});
+      
+        axios.get("http://localhost:3000/api/v1/records")
+          .then((res) => {
+            products.value = res.data.record;
+            console.log(products.value);
+            return products.value;
+          })
+          .catch(() => {});
+        //   console.log('products.value[0].flight_status'+products.value[0].flight_status);
+        //   products.value.map((item)=>{
+        //     if (item.flight_status == "Pending") {
+        //         item.statusColor = "blue";
+        //         console.log('item.statusColor'+item.statusColor);
+        //         return item;
+        // } else {
+        //   if (item.flight_status == "Flown") {
+        //     item.statusColor = "red";
+        //     return item;
+        //   } else {
+        //     item.statusColor = "deepGreen";
+        //     return item;
+        //   }
+        // }
+        //   });
     });
 
     const toast = useToast();
     const dt = ref();
-    const products = ref();
+    const products = ref([]);
     const productDialog = ref(false);
     const deleteProductDialog = ref(false);
     const deleteProductsDialog = ref(false);
@@ -29,6 +58,8 @@ export default {
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     });
+
+
     const submitted = ref(false);
     const statuses = ref([
       { label: "INSTOCK", value: "instock" },
@@ -41,7 +72,7 @@ export default {
         return value.toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
-        });
+        })
     };
     const openNew = () => {
       product.value = {};
@@ -54,19 +85,26 @@ export default {
     };
     const saveProduct = () => {
       submitted.value = true;
+      console.log('product.value.ticket_number'+product.value.ticket_number);
 
       if (product.value.passenger_name.trim()) {
         if (product.value.ticket_number) {
-          product.value.inventoryStatus = product.value.inventoryStatus.value
-            ? product.value.inventoryStatus.value
-            : product.value.inventoryStatus;
-          products.value[findIndexById(product.value.id)] = product.value;
+
+          products.value[findIndexById(product.value.airline+product.value.number)] = product.value;
+          console.log("got here");
+          console.log(product.value.issuing_date);
+          //no travel type
+          axios.patch(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`,product.value)
+            .then(res => console.log(res.data))
+            .catch(error => console.log(error.data))
           toast.add({
             severity: "success",
             summary: "Successful",
             detail: "Product Updated",
             life: 3000,
           });
+
+          
         } else {
           product.value.inventoryStatus = product.value.inventoryStatus
             ? product.value.inventoryStatus.value
@@ -93,20 +131,22 @@ export default {
       deleteProductDialog.value = true;
     };
     const deleteProduct = () => {
-      axios.delete(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`).then((res)=>{
-        deleteProductDialog.value = false;
+      
+      axios.delete(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`)
+        .then((res)=>{
+          console.log(res.data)
+        }).catch(error => console.log(error.data))
+      products.value = products.value.filter(
+        (val) => val.ticket_number !== product.value.ticket_number
+      );
+      deleteProductDialog.value = false;
       product.value = {};
       toast.add({
         severity: "success",
-        summary: res.data.msg,
-        detail: "Record Deleted",
+        summary: "Successful",
+        detail: "Product Deleted",
         life: 3000,
       });
-      }).catch()
-      products.value = products.value.filter(
-        (val) => val.id !== product.value.id
-      );
-      
     };
     const findIndexById = (id) => {
       let index = -1;
@@ -121,9 +161,9 @@ export default {
     };
     const createId = () => {
       let id = "";
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       for (let i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length))
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       return id;
     };
@@ -131,7 +171,9 @@ export default {
       deleteProductsDialog.value = true;
     };
     const deleteSelectedProducts = () => {
-      axios.delete(`http://localhost:3000api/v1/records/${selectedProducts.value}`).then().catch();
+      console.log("delete here");
+      //code block doesn't reach here
+      axios.delete(`http://localhost:3000/api/v1/records/${selectedProducts.value}`).then().catch();
       products.value = products.value.filter(
         (val) => !selectedProducts.value.includes(val)
       );
@@ -144,8 +186,6 @@ export default {
         life: 3000,
       });
     };
-
-   console.log("In The scripts");
 
     return {
       dt,
@@ -172,5 +212,3 @@ export default {
     };
   },
 };
-
-

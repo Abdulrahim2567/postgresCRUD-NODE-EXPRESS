@@ -20,7 +20,7 @@ const getAllRecords = asyncWrapper (async (req, res)=>{
                row.days = Math.ceil(hours).toString().concat(" hrs")
             if(dateDB.getTime() > new Date().getTime())
                {
-                  row.days = fullday + " Days"
+                  row.days =  (fullday * -1) + " Days"
                   row.flight_status = `Pending`
                }
             else if(dateDB.getTime() < new Date().getTime())
@@ -126,6 +126,8 @@ const getSingleRecord = asyncWrapper (async (req, res, next)=>{
 })
 const updateRecord = asyncWrapper(async(req, res, next)=>{
    const {id:ticket_number} = req.params
+   console.log(req.params);
+   console.log(req.body);
    const query = `SELECT * FROM travel_ticket WHERE ticket_number = $1`
    await pool.query(query, [ticket_number],
    (error, results) =>{
@@ -137,7 +139,9 @@ const updateRecord = asyncWrapper(async(req, res, next)=>{
             return next (createCustomError(`No record exists with ticket_number: ${ticket_number}`, StatusCodes.NOT_FOUND))
          }
          //record exists
-         const {passenger_name, airline, amount, itinerary, issuing_date,  travel_type} = req.body
+         const {passenger_name, airline, amount, itinerary,  travel_type} = req.body
+         let issuing_date = new Date(req.body.issuing_date).toUTCString()
+         console.log(issuing_date);
          if(!passenger_name || !airline || !amount || !itinerary || !issuing_date || !travel_type)
             //any form field is empty
             return next (createCustomError(`Make sure no field is empty before continuing`, StatusCodes.FORBIDDEN))
@@ -160,6 +164,7 @@ const updateRecord = asyncWrapper(async(req, res, next)=>{
 //delete record
 const deleteRecord = asyncWrapper(async(req, res, next)=>{
    const {id:ticket_number} = req.params
+   console.log(ticket_number);
    const query = `SELECT * FROM travel_ticket WHERE ticket_number = $1`
    await pool.query(query, [ticket_number],
    (error, results) =>{

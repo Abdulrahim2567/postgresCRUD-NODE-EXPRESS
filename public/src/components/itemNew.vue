@@ -71,7 +71,7 @@
               aria-label="Default select example"
               id="5"
             >
-              <option selected disabled value="">Choose...</option>
+              <option selected disabled value="XAF">Choose...</option>
               <option value="XAF">XAF</option>
               <option value="£">£</option>
               <option value="$">$</option>

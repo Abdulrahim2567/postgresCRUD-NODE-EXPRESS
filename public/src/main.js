@@ -54,3 +54,4 @@ app.component('Toolbar', Toolbar);
 app.component('FileUpload', FileUpload);
 
 app.mount('#app')
+

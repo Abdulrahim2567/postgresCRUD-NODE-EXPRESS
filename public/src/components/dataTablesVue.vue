@@ -56,14 +56,14 @@
 
         <Column :exportable="false">
           <template #body="slotProps">
-            <Button style="margin-right: 2.5px; background: none; color: blue; border-color: black;"
+            <Button style="margin-right: 2.5px; margin-left: 2.5px; border: none;"
               icon="pi pi-pencil"
-              class="p-button p-button mr-2"
+              class="p-button mr-2 btn-edit"
               @click="editProduct(slotProps.data)"
             />
-            <Button style="margin-left: 2.5px; background: none; color: red; border-color: black;"
+            <Button style="margin-left: 2.5px; margin-right: 2.5px; border: none;"
               icon="pi pi-trash"
-              class="p-button p-button"
+              class="p-button btn-delete"
               @click="confirmDeleteProduct(slotProps.data)"
             />
           </template>
@@ -94,34 +94,27 @@
 
       <div class="field">
         <label for="name">Issuing Date</label>
-        <Input
-          type="date"
-          v-model.trim="product.issuing_date"
-          required="true"
-          autofocus
-          :class="{ 'p-invalid': submitted && !product.issuing_date }"
-          class="form-control"
-        />
+        <Calendar
+            id="date"
+            v-model="product.issuing_date"
+            :class="{ 'p-invalid': submitted && !product.issuing_date }"
+            class="mb-2 putLa"
+            :showIcon="true"
+            required="true"
+          />
+       
         <small class="p-error" v-if="submitted && !product.issuing_date"
           >Issuing Date is required.</small
         >
       </div>
       <div class="field">
-        <label for="name">Flight Type</label>
-        <select
-          class="form-select"
-          required
-          aria-label="Default select example"
-          v-model.trim="product.travel_type"
-          id="name"
-          :class="{ 'p-invalid': submitted && !product.itinerary }"
-        >
-          <option selected disabled value="">Choose...</option>
-          <option value="Flight">Flight</option>
-          <option value="Boat">Boat</option>
-          <option value="Train">Train</option>
-          <option value="Car">Car</option>
-        </select>
+        <label for="name">Travel Type</label>
+        <Dropdown
+            v-model="product.travel_type"
+            :options="type"
+            optionLabel="name"
+            class="mb-2 putLa"
+          />
         <small class="p-error" v-if="submitted && !product.itinerary"
           >Flight Type is required.</small
         >
@@ -155,13 +148,13 @@
         <Button
           label="Cancel"
           icon="pi pi-times"
-          class="p-button-text"
+          class="p-button-primary"
           @click="hideDialog"
         />
         <Button
           label="Save"
-          icon="pi pi-check"
-          class="p-button-text"
+          icon="pi pi-check-circle"
+          class="p-button-success"
           @click="saveProduct"
         />
       </template>
@@ -308,5 +301,18 @@ body{
       margin-bottom: 0.25rem;
     }
   }
+}
+.btn-delete, .btn-edit{
+  background: none;
+  color: black;
+  transition: all 0.5s ease-in-out;
+}
+.btn-delete:hover{
+  background: red;
+  color: #fff;
+}
+.btn-edit:hover{
+  background: blue;
+  color: #fff;
 }
 </style>

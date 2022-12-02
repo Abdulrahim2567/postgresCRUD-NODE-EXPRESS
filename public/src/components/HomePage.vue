@@ -60,16 +60,16 @@
       <div class="formgrid grid">
         <div class="field d-flex">
           <label for="firstname2" class="labels">Ticket No</label>
-          <InputNumber
+          <InputText
             v-model="product.airline"
-            mode="decimal"
-            :min="100"
-            :max="999"
+            type="text"
+            :minlength="3"
+            :maxlength="3"
             class="mb-2 put"
           />
-          <InputNumber
+          <InputText
             v-model="product.number"
-            mode="decimal"
+            type="text"
             placeholder="524895455"
             class="mb-2 putL"
           />
