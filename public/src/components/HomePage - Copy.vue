@@ -284,7 +284,7 @@ export default {
 .col-4:hover{
     transform: scale(1.1);
     line-height: 90px;
-  border-radius: 10px;
+  border-radius: 0px;
 }
 .buttons {
   //   background-color: #cf1e07c7; /* Green */

@@ -12,11 +12,11 @@ export default {
       },
       selectedType: null,
       type: [
-        { name: "Flight" },
-        { name: "Hotel" },
-        { name: "Car" },
-        { name: "Misc" },
-      ],
+        "Flight",
+        "Hotel",
+        "Car",
+        "Misc"
+      ]
     };
   },
   setup() {
@@ -90,10 +90,8 @@ export default {
       if (product.value.passenger_name.trim()) {
         if (product.value.ticket_number) {
 
-          products.value[findIndexById(product.value.airline+product.value.number)] = product.value;
-          console.log("got here");
+          products.value[findIndexById(product.value.ticket_number)] = product.value;
           console.log(product.value.issuing_date);
-          //no travel type
           axios.patch(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`,product.value)
             .then(res => console.log(res.data))
             .catch(error => console.log(error.data))
@@ -171,8 +169,6 @@ export default {
       deleteProductsDialog.value = true;
     };
     const deleteSelectedProducts = () => {
-      console.log("delete here");
-      //code block doesn't reach here
       axios.delete(`http://localhost:3000/api/v1/records/${selectedProducts.value}`).then().catch();
       products.value = products.value.filter(
         (val) => !selectedProducts.value.includes(val)

@@ -164,7 +164,6 @@ const updateRecord = asyncWrapper(async(req, res, next)=>{
 //delete record
 const deleteRecord = asyncWrapper(async(req, res, next)=>{
    const {id:ticket_number} = req.params
-   console.log(ticket_number);
    const query = `SELECT * FROM travel_ticket WHERE ticket_number = $1`
    await pool.query(query, [ticket_number],
    (error, results) =>{

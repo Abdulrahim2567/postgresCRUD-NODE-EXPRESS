@@ -16,7 +16,10 @@
       >
         <template #header>
           <div class="table-header">
-            <h5 class="mb-2 md:m-0 p-as-md-center bold">ALL TICKETS</h5>
+            <h5 class="mb-2 md:m-0 p-as-md-center bold">
+              <em class="pi pi-angle-left text-primary px-3 mt-1 py-0 home" style="font-size:16px;" />
+              ALL TICKETS
+            </h5>
             <span class="p-input-icon-left">
               <i class="pi pi-search " />
               <InputText
@@ -29,7 +32,7 @@
 
         <Column selectionMode="multiple" :exportable="false"></Column>
 
-        <Column field="passenger_name" header="Travel" :sortable="true" class="font">
+        <Column  field="passenger_name" header="Travel" :sortable="true" class="font">
           <template #body="slotProps">
             <div class="displayTravel font">
               <span class="displayTravel font" style="font-weight: bold;">{{ slotProps.data.passenger_name }}</span>
@@ -112,10 +115,9 @@
         <Dropdown
             v-model="product.travel_type"
             :options="type"
-            optionLabel="name"
             class="mb-2 putLa"
           />
-        <small class="p-error" v-if="submitted && !product.itinerary"
+        <small class="p-error" v-if="(submitted && !product.travel_type)"
           >Flight Type is required.</small
         >
       </div>
@@ -148,7 +150,7 @@
         <Button
           label="Cancel"
           icon="pi pi-times"
-          class="p-button-primary"
+          class="p-button-secondary"
           @click="hideDialog"
         />
         <Button
@@ -177,13 +179,13 @@
         <Button
           label="No"
           icon="pi pi-times"
-          class="p-button-text"
+          class="p-button-secondary p-2 px-3"
           @click="deleteProductDialog = false"
         />
         <Button
           label="Yes"
           icon="pi pi-check"
-          class="p-button-text"
+          class="p-button-danger p-2 px-3"
           @click="deleteProduct"
         />
       </template>
@@ -219,100 +221,6 @@
   </div>
 </template>
 
-<script  type="application/javascript" src="./scripts/index.js"></script>
+<script  type="application/javascript" src="./scripts/dataTables.js"></script>
 
-<style lang="scss" scoped>
-body{
-  font-family:Arial, Helvetica, sans-serif;
-}
-.displayTravel{
-    display: block;
-}
-
-.bold{
-  font-weight: bold;
-  font-family:Arial, Helvetica, sans-serif;
-}
-
-.grey{
-  color:grey;
-  font-family:Arial, Helvetica, sans-serif;
-}
-
-.blue{
-  color: blue;
-  font-family:Arial, Helvetica, sans-serif;
-}
-
-.red{
-  color: red;
-  font-family:Arial, Helvetica, sans-serif;
-}
-.green{
-  color:green;
-  font-family:Arial, Helvetica, sans-serif;
-}
-.light-green{
-  color: rgb(78, 233, 78);
-}
-.font{
-  font-family: Arial, Helvetica, sans-serif;
-}
-.deepGreen{
-  color: rgba(54, 97, 54, 0.479);
-  font-family:Arial, Helvetica, sans-serif;
-}
-.statusTicket{
-    color: rgb(32, 32, 237);
-    font-family:Arial, Helvetica, sans-serif;
-}
-.table-header {
-  font-family:Arial, Helvetica, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  @media screen and (max-width: 960px) {
-    align-items: start;
-  }
-}
-
-.product-image {
-  width: 50px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-}
-
-.p-dialog .product-image {
-  width: 50px;
-  margin: 0 auto 2rem auto;
-  display: block;
-}
-
-.confirmation-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media screen and (max-width: 960px) {
-  ::v-deep(.p-toolbar) {
-    flex-wrap: wrap;
-
-    .p-button {
-      margin-bottom: 0.25rem;
-    }
-  }
-}
-.btn-delete, .btn-edit{
-  background: none;
-  color: black;
-  transition: all 0.5s ease-in-out;
-}
-.btn-delete:hover{
-  background: red;
-  color: #fff;
-}
-.btn-edit:hover{
-  background: blue;
-  color: #fff;
-}
-</style>
+<style scoped>@import "./css/dataTables.css"</style>
