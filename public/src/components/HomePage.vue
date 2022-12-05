@@ -60,17 +60,17 @@
       <div class="formgrid grid">
         <div class="field d-flex">
           <label for="firstname2" class="labels">Ticket No</label>
-          <InputText
+          <InputNumber
             v-model="product.airline"
-            type="text"
-            :minlength="3"
-            :maxlength="3"
+            mode="decimal"
+            :min="0"
+            :max="999"
             class="mb-2 put"
             placeholder = "392"
           />
-          <InputText
+          <InputNumber
             v-model="product.number"
-            type="text"
+            mode="decimal"
             placeholder="524895455"
             class="mb-2 putL"
           />
@@ -120,18 +120,17 @@
           <label for="lastname2" class="labels">Amount</label>
           <!-- <span class="input-group-text mb-2 putCurr" id="basic-addon1"
             >XAF</span -->
-            <Dropdown
-            v-model="product.currency"
-            :options="currency"
-            class="mb-2 mr-2 putCurr"
-            placeholder = "XAF"
-            defaultValue = "XAF"
-          />
+            <select v-model="product.currency"  class="input-group-text mb-2 putCurr">
+            <option selected value="XAF">XAF</option>
+            <option value="£">£</option>
+            <option value="$">$</option>
+          </select>
           
           <InputNumber
             v-model="product.amount"
             mode="decimal"
             class="mb-2 putL"
+            placeholder = "250,000"
           />
         </div>
       </div>

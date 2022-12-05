@@ -31,6 +31,8 @@ import './assets/products.json'
 import Card from 'primevue/card';
 import route from './router'
 
+import jquery from "jquery"
+
 
 
 
@@ -38,6 +40,7 @@ const app = createApp(App);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(route);
+app.use(jquery);
 app.component('InputText', InputText);
 app.component('Calendar', Calendar);
 app.component('Dropdown', Dropdown);

@@ -2,6 +2,7 @@ import { ref, onMounted } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
 import axios from "axios";
+import jquery from "jquery"
 
 export default {
   name: "dataTablesVue",
@@ -26,25 +27,26 @@ export default {
           .then((res) => {
             products.value = res.data.record;
             console.log(products.value);
+            products.value.map((item)=>{
+              if (item.flight_status == "Pending") {
+                  item.statusColor = "blue bold";
+                  console.log('item.statusColor'+item.statusColor);
+                  return item;
+          } else {
+            if (item.flight_status == "Flown") {
+              console.log('item.statusColor'+item.statusColor);
+              item.statusColor = "red bold";
+              return item;
+            } else {
+              item.statusColor = "deepGreen bold";
+              console.log('item.statusColor'+item.statusColor);
+              return item;
+            }
+          }
+            });
             return products.value;
           })
           .catch(() => {});
-        //   console.log('products.value[0].flight_status'+products.value[0].flight_status);
-        //   products.value.map((item)=>{
-        //     if (item.flight_status == "Pending") {
-        //         item.statusColor = "blue";
-        //         console.log('item.statusColor'+item.statusColor);
-        //         return item;
-        // } else {
-        //   if (item.flight_status == "Flown") {
-        //     item.statusColor = "red";
-        //     return item;
-        //   } else {
-        //     item.statusColor = "deepGreen";
-        //     return item;
-        //   }
-        // }
-        //   });
     });
 
     const toast = useToast();
@@ -93,8 +95,11 @@ export default {
           products.value[findIndexById(product.value.ticket_number)] = product.value;
           console.log(product.value.issuing_date);
           axios.patch(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`,product.value)
-            .then(res => console.log(res.data))
+            .then((res) =>{
+              location.reload(location.href + " #tableId")
+            })
             .catch(error => console.log(error.data))
+            
           toast.add({
             severity: "success",
             summary: "Successful",
@@ -182,7 +187,7 @@ export default {
         life: 3000,
       });
     };
-
+   
     return {
       dt,
       products,

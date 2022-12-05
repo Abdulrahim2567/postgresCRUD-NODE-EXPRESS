@@ -1,7 +1,13 @@
 <template>
+  <router-link
+          to="/"
+          class="p-button-link mb-4"
+          >Home</router-link
+        >
   <div class="container mt-3 mb-3">
     <div class="card">
       <DataTable
+        id="tableId"
         ref="dt"
         :value="products"
         v-model:selection="selectedProducts"
@@ -17,7 +23,10 @@
         <template #header>
           <div class="table-header">
             <h5 class="mb-2 md:m-0 p-as-md-center bold">
-              <em class="pi pi-angle-left text-primary px-3 mt-1 py-0 home" style="font-size:16px;" />
+              <router-link
+                to="/"
+                class="pi pi-angle-left text-primary px-3 mt-1 py-0 home"
+              ></router-link>
               ALL TICKETS
             </h5>
             <span class="p-input-icon-left">
@@ -34,7 +43,7 @@
 
         <Column  field="passenger_name" header="Travel" :sortable="true" class="font">
           <template #body="slotProps">
-            <div class="displayTravel font">
+            <div class="displayTravel font here">
               <span class="displayTravel font" style="font-weight: bold;">{{ slotProps.data.passenger_name }}</span>
               <span class="displayTravel grey font" >{{ slotProps.data.itinerary }}</span>
               <span class="displayTravel font">
@@ -50,9 +59,9 @@
               <span class="displayTravel"><span class="light-green bold font">{{( slotProps.data.currency +' ')}}</span>
               <span style="font-weight: bold;" clas = "font">{{(slotProps.data.amount)}}</span></span>
               <span class="displayTravel grey font">{{ slotProps.data.days }}</span>
-              <span 
-              v-bind:class="{'red': flown, 'blue': pending, 'green': boarding}"
-                class="statusTicket bold font" id="flight_status">{{slotProps.data.flight_status}}</span>
+              <span :class="slotProps.data.statusColor">{{
+                slotProps.data.flight_status
+              }}</span>
             </div>
           </template>
         </Column>
@@ -61,6 +70,7 @@
           <template #body="slotProps">
             <Button style="margin-right: 2.5px; margin-left: 2.5px; border: none;"
               icon="pi pi-pencil"
+              id="btn-edit"
               class="p-button mr-2 btn-edit"
               @click="editProduct(slotProps.data)"
             />

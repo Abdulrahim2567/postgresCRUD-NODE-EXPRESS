@@ -140,14 +140,14 @@ export default {
     const deleteProductDialog = ref(false);
     const deleteProductsDialog = ref(false);
     const product = reactive({
-      airline: "",
-      number: "",
-      passenger_name: "",
-      amount: "",
-      travel_type: "",
-      issuing_date: "",
-      itinerary: "",
-      currency: "",
+      airline: null,
+      number: null,
+      passenger_name: null,
+      amount: null,
+      travel_type: null,
+      issuing_date: null,
+      itinerary: null,
+      currency: null,
     });
     const productService = ref(new ProductService());
     const selectedProducts = ref();
@@ -179,6 +179,9 @@ export default {
     };
     const saveProduct = () => {
       delete product.value;
+      product.airline = toString(product.airline);
+      product.number = toString(product.number);
+
       axios
         .post("http://localhost:3000/api/v1/records", product)
         .then(() => {

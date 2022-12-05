@@ -48,6 +48,7 @@
  .currency{
    padding-left: 4px;
    padding-right: 4px;
+
  }
  .put {
    padding: none;
@@ -55,9 +56,11 @@
  }
  
  .putCurr {
-   padding: none;
-   width: 68px;
-   background: greenyellow;
+   width: 68px; 
+   height: 50px; 
+   background: greenyellow; 
+   padding: 0px; 
+   margin-right: 0px;
  }
  
  .putL {
@@ -71,6 +74,7 @@
  .labels {
    width: 120px;
  }
+
  ::-webkit-input-placeholder{
    color: gray;
  }
