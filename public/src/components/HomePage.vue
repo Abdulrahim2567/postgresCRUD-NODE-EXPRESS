@@ -120,7 +120,7 @@
           <label for="lastname2" class="labels">Amount</label>
           <!-- <span class="input-group-text mb-2 putCurr" id="basic-addon1"
             >XAF</span -->
-            <select v-model="product.currency"  class="input-group-text mb-2 putCurr">
+          <select v-model="product.currency" placeholder="XAF" class="input-group-text mb-2 putCurr">
             <option selected value="XAF">XAF</option>
             <option value="£">£</option>
             <option value="$">$</option>

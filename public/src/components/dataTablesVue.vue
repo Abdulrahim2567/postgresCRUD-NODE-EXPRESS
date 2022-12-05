@@ -1,9 +1,4 @@
 <template>
-  <router-link
-          to="/"
-          class="p-button-link mb-4"
-          >Home</router-link
-        >
   <div class="container mt-3 mb-3">
     <div class="card">
       <DataTable
@@ -25,7 +20,7 @@
             <h5 class="mb-2 md:m-0 p-as-md-center bold">
               <router-link
                 to="/"
-                class="pi pi-angle-left text-primary px-3 mt-1 py-0 home"
+                class="pi pi-arrow-left back px-3 mt-1 py-0"
               ></router-link>
               ALL TICKETS
             </h5>

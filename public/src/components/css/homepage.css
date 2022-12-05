@@ -9,7 +9,6 @@
  .col-4:hover {
    transition: 0.5s ease-in-out;
    transform: scale(1.05);
-   line-height: 90px;
    border-radius: 10px;
    -webkit-border-radius: 10px;
    -moz-border-radius: 10px;
@@ -46,9 +45,11 @@
    width: 620px;
  }
  .currency{
-   padding-left: 4px;
+   width: 90px;
+   background: greenyellow;
+   margin-left: 14px;
+   padding: 0; 
    padding-right: 4px;
-
  }
  .put {
    padding: none;
@@ -71,10 +72,15 @@
    width: 360px;
  }
  
+ 
  .labels {
    width: 120px;
  }
-
+ .p-dropdown-trigger{
+   padding: 0px;
+   display: none;
+   margin: 0px;
+ }
  ::-webkit-input-placeholder{
    color: gray;
  }

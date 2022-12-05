@@ -179,8 +179,9 @@ export default {
     };
     const saveProduct = () => {
       delete product.value;
-      product.airline = toString(product.airline);
-      product.number = toString(product.number);
+      product.airline = product.airline.toString()
+      product.number = product.number.toString()
+      console.log('product.number==>'+typeof(product.number)); 
 
       axios
         .post("http://localhost:3000/api/v1/records", product)

@@ -82,7 +82,7 @@ const createMultipleRecords = asyncWrapper(async (req, res)=>{
    }
    res.status(StatusCodes.CREATED).json({inserted: inserted_records, non_inserted: not_inserted})
 })
-
+//view a single record
 const getSingleRecord = asyncWrapper (async (req, res, next)=>{
    const {id:ticket_number} = req.params
    const query = `SELECT * FROM travel_ticket WHERE ticket_number = $1`
@@ -124,6 +124,7 @@ const getSingleRecord = asyncWrapper (async (req, res, next)=>{
       }
    })
 })
+//update A Record
 const updateRecord = asyncWrapper(async(req, res, next)=>{
    const {id:ticket_number} = req.params
    console.log(req.params);
