@@ -16,6 +16,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';     //optional for column grouping
 import Row from 'primevue/row';  
 import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 import Toolbar from 'primevue/toolbar';
 import FileUpload from 'primevue/fileupload';
 import Dialog from 'primevue/dialog';
@@ -41,6 +42,7 @@ app.use(PrimeVue);
 app.use(ToastService);
 app.use(route);
 app.use(jquery);
+app.component('Toast',Toast);
 app.component('InputText', InputText);
 app.component('Calendar', Calendar);
 app.component('Dropdown', Dropdown);

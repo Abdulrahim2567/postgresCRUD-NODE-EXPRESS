@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="container mt-3 mb-3">
     <div class="card">
       <DataTable

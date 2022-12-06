@@ -1,17 +1,13 @@
-import { ref, reactive, onMounted } from "vue";
-import { FilterMatchMode } from "primevue/api";
+import { ref, reactive, onMounted, defineComponent } from "vue";
 import { useToast } from "primevue/usetoast";
-import ProductService from "../service/productService";
 import axios from "axios";
 
-export default {
+export default defineComponent({
   name: "HomePage",
   components: {},
   data() {
     return {
-      Ticket: {
-        issuDate: null,
-      },
+      
       selectedType: null,
       type: [
         "Flight",
@@ -36,14 +32,19 @@ export default {
           await axios
             .post("http://localhost:3000/api/v1/records", objectFile)
             .then(() => {
+              toast.add({severity:'success', summary: 'Success message', detail:'File was uploaded', life: 3000});
               initializeProduct();
             })
-            .catch(() => {})
+            .catch((error) => {
+              console.log('error.data.errmsg==>'+error.data);
+              toast.add({severity:'error', summary: 'Error message', detail:'File was not uploaded', life: 3000});
+            })
          
         };
 
         reader.readAsText(element);
       }
+      
     };
 
     function extractData(file) {
@@ -128,17 +129,11 @@ export default {
     };
 
     onMounted(() => {
-      productService.value
-        .getProducts()
-        .then((data) => (products.value = data));
+      
     });
 
     const toast = useToast();
-    const dt = ref();
-    const products = ref();
     const productDialog = ref(false);
-    const deleteProductDialog = ref(false);
-    const deleteProductsDialog = ref(false);
     const product = reactive({
       airline: null,
       number: null,
@@ -149,11 +144,7 @@ export default {
       itinerary: null,
       currency: null,
     });
-    const productService = ref(new ProductService());
-    const selectedProducts = ref();
-    const filters = ref({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    });
+    
     const submitted = ref(false);
     const statuses = ref([
       { label: "INSTOCK", value: "instock" },
@@ -178,6 +169,7 @@ export default {
       submitted.value = false;
     };
     const saveProduct = () => {
+      
       delete product.value;
       product.airline = product.airline.toString()
       product.number = product.number.toString()
@@ -186,37 +178,35 @@ export default {
       axios
         .post("http://localhost:3000/api/v1/records", product)
         .then(() => {
+          toast.add({severity:'success', summary: 'Success message', detail:'Ticket created', life: 3000});
           submitted.value = true;
           console.log("form==>" + product.issuing_date);
           productDialog.value = false;
           initializeProduct();
+          
         })
-        .catch(() => {});
+        .catch(() => {
+          toast.add({severity:'error', summary: 'Error message', detail:'Ticket was not created', life: 3000});
+        });
     };
 
     const initializeProduct = () => {
-      product.amount = "";
-      product.airline = "";
-      product.number = "";
-      product.passenger_name = "";
-      product.amount = "";
-      product.travel_type = "";
-      product.issuing_date = "";
-      product.itinerary = "";
-      product.currency = "";
+      product.amount = null;
+      product.airline = null;
+      product.number = null;
+      product.passenger_name = null;
+      product.amount = null;
+      product.travel_type = null;
+      product.issuing_date = null;
+      product.itinerary = null;
+      product.currency = null;
     };
 
     return {
       initializeProduct,
-      dt,
       extractData,
-      products,
       productDialog,
-      deleteProductDialog,
-      deleteProductsDialog,
       product,
-      selectedProducts,
-      filters,
       submitted,
       statuses,
       formatCurrency,
@@ -227,4 +217,4 @@ export default {
       onTemplatedUpload,
     };
   },
-};
+});

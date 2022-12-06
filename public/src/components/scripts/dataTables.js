@@ -1,16 +1,13 @@
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineComponent } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
 import axios from "axios";
-import jquery from "jquery"
 
-export default {
+export default defineComponent({
   name: "dataTablesVue",
   data() {
     return {
-      Ticket: {
-        issuDate: null,
-      },
+      
       selectedType: null,
       type: [
         "Flight",
@@ -50,7 +47,6 @@ export default {
     });
 
     const toast = useToast();
-    const dt = ref();
     const products = ref([]);
     const productDialog = ref(false);
     const deleteProductDialog = ref(false);
@@ -97,15 +93,23 @@ export default {
           axios.patch(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`,product.value)
             .then((res) =>{
               location.reload(location.href + " #tableId")
+              toast.add({
+                severity: "success",
+                summary: "Success message",
+                detail: "Ticket updated",
+                life: 3000,
+              });
             })
-            .catch(error => console.log(error.data))
+            .catch(error => {
+              console.log(error.data);
+              toast.add({
+                severity: "error",
+                summary: "Error message",
+                detail: "Failed to update Ticket",
+                life: 3000,
+              });
+            })
             
-          toast.add({
-            severity: "success",
-            summary: "Successful",
-            detail: "Product Updated",
-            life: 3000,
-          });
 
           
         } else {
@@ -113,12 +117,6 @@ export default {
             ? product.value.inventoryStatus.value
             : "INSTOCK";
           products.value.push(product.value);
-          toast.add({
-            severity: "success",
-            summary: "Successful",
-            detail: "Product Created",
-            life: 3000,
-          });
         }
 
         productDialog.value = false;
@@ -137,19 +135,27 @@ export default {
       
       axios.delete(`http://localhost:3000/api/v1/records/${product.value.ticket_number}`)
         .then((res)=>{
-          console.log(res.data)
-        }).catch(error => console.log(error.data))
+          console.log(res.data);
+          toast.add({
+            severity: "success",
+            summary: "Succes message",
+            detail: "Ticket deleted",
+            life: 3000,
+          });
+        }).catch(error => {
+          console.log(error.data);
+          toast.add({
+            severity: "error",
+            summary: "Error message",
+            detail: "Ticket was not deleted",
+            life: 3000,
+          });
+        })
       products.value = products.value.filter(
         (val) => val.ticket_number !== product.value.ticket_number
       );
       deleteProductDialog.value = false;
       product.value = {};
-      toast.add({
-        severity: "success",
-        summary: "Successful",
-        detail: "Product Deleted",
-        life: 3000,
-      });
     };
     const findIndexById = (id) => {
       let index = -1;
@@ -189,7 +195,6 @@ export default {
     };
    
     return {
-      dt,
       products,
       productDialog,
       deleteProductDialog,
@@ -212,4 +217,4 @@ export default {
       deleteSelectedProducts,
     };
   },
-};
+});

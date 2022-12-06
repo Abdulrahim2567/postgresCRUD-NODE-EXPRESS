@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="container height row box ">
     <div class="center ">
       <div class="row d-flex justify-content-center">
@@ -17,13 +18,14 @@
           <FileUpload
             mode="basic"
             @upload="onTemplatedUpload($event)"
+            @select="onSelectedFiles"
             accept=".AIR"
             :maxFileSize="1000000"
             :auto="true"
             name="demo[]"
-            @select="onSelectedFiles"
+            
             chooseLabel="Import single"
-            style="background-color: rgba(15, 212, 9, 0.904); border: none;"
+            style="background-color: rgba(15, 212, 9, 0.904); border: none; height: 200px; width: 269px;"
           />
         </div>
         <div class="col-4 buttons square" style="background-color: #155df7c7">
@@ -37,7 +39,7 @@
             name="demo[]"
             @select="onSelectedFiles"
             chooseLabel="Import Batch"
-            style="background-color: #155df7c7; border: none"
+            style="background-color: #155df7c7; border: none; height: 200px; width: 269px;"
           />
         </div>
 
